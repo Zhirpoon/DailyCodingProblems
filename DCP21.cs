@@ -25,16 +25,6 @@ namespace DCP21
             public int End;
         }
 
-        public class Room
-        {
-            public Room()
-            {
-                Lectures = new List<TimeInterval>();
-            }
-
-            public List<TimeInterval> Lectures;
-        }
-
         public static void Main(string[] args)
         {
             var times = new TimeInterval[] { new TimeInterval(30,75), new TimeInterval(0, 50), new TimeInterval(60, 150)};
@@ -44,7 +34,7 @@ namespace DCP21
 
         public static int GetRequiredRoomAmount(TimeInterval[] times)
         {
-            var rooms = new List<Room>();
+            var rooms = new List<List<TimeInterval>>();
 
             if(times.Length == 0)
             {
@@ -52,7 +42,7 @@ namespace DCP21
             }
             else
             {
-                rooms.Add(new Room());
+                rooms.Add(new List<TimeInterval>());
             }
 
             foreach(var ti in times)
@@ -61,9 +51,9 @@ namespace DCP21
 
                 foreach (var room in rooms)
                 {
-                    if(room.Lectures.Any(l => ti.End < l.Start || ti.Start > l.End) || room.Lectures.Count == 0)
+                    if(room.Any(l => ti.End < l.Start || ti.Start > l.End) || room.Count == 0)
                     {
-                        room.Lectures.Add(ti);
+                        room.Add(ti);
                         newRoomRequired = false;
                         break;
                     }
@@ -71,8 +61,8 @@ namespace DCP21
 
                 if (newRoomRequired)
                 {
-                    var newRoom = new Room();
-                    newRoom.Lectures.Add(ti);
+                    var newRoom = new List<TimeInterval>();
+                    newRoom.Add(ti);
                     rooms.Add(newRoom);
                 }
             }
