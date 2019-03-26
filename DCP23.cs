@@ -64,41 +64,25 @@ namespace DCP23
                 if(IsValid(matrix, new Tuple<int, int>(p.Position.Item1+1, p.Position.Item2)))
                 {
                     matrix[p.Position.Item1, p.Position.Item2] = true;
-                    var point = new Point(new Tuple<int, int>(p.Position.Item1 + 1, p.Position.Item2), p);
-                    if (!queue.Contains(point))
-                    {
-                        queue.Enqueue(point);
-                    }
+                    queue.Enqueue(new Point(new Tuple<int, int>(p.Position.Item1 + 1, p.Position.Item2), p));
                 }
 
                 if (IsValid(matrix, new Tuple<int, int>(p.Position.Item1 - 1, p.Position.Item2)))
                 {
                     matrix[p.Position.Item1, p.Position.Item2] = true;
-                    var point = new Point(new Tuple<int, int>(p.Position.Item1 - 1, p.Position.Item2), p);
-                    if (!queue.Contains(point))
-                    {
-                        queue.Enqueue(point);
-                    }
+                    queue.Enqueue(new Point(new Tuple<int, int>(p.Position.Item1 - 1, p.Position.Item2), p));
                 }
 
                 if (IsValid(matrix, new Tuple<int, int>(p.Position.Item1, p.Position.Item2 + 1)))
                 {
                     matrix[p.Position.Item1, p.Position.Item2] = true;
-                    var point = new Point(new Tuple<int, int>(p.Position.Item1, p.Position.Item2 + 1), p);
-                    if (!queue.Contains(point))
-                    {
-                        queue.Enqueue(point);
-                    }
+                    queue.Enqueue(new Point(new Tuple<int, int>(p.Position.Item1, p.Position.Item2 + 1), p));
                 }
 
                 if (IsValid(matrix, new Tuple<int, int>(p.Position.Item1, p.Position.Item2 - 1)))
                 {
                     matrix[p.Position.Item1, p.Position.Item2] = true;
-                    var point = new Point(new Tuple<int, int>(p.Position.Item1, p.Position.Item2 - 1), p);
-                    if (!queue.Contains(point))
-                    {
-                        queue.Enqueue(point);
-                    }
+                    queue.Enqueue(new Point(new Tuple<int, int>(p.Position.Item1, p.Position.Item2 - 1), p));
                 }
             }
             return null;
