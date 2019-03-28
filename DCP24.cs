@@ -21,8 +21,6 @@ namespace DCP24
     {
         public class Node
         {
-            public enum Origins { Descendant, Ascendant, First };
-
             public Node()
             {
             }
@@ -56,7 +54,7 @@ namespace DCP24
 
             public bool Lock()
             {
-                if(Lock(this, Origins.First))
+                if(!AscendantsLocked(parent) && !DescendantsLocked(left) && !DescendantsLocked(right))
                 {
                     isLocked = true;
                     return true;
@@ -64,57 +62,9 @@ namespace DCP24
                 return false;
             }
 
-            public bool Lock(Node node, Origins origin)
-            {
-                if (node.IsLocked() && origin != Origins.First)
-                {
-                    return false;
-                }
-
-                var canLock = true;
-
-                switch (origin)
-                {
-                    case Origins.Ascendant:
-                        if (node.parent != null)
-                        {
-                            canLock = Lock(node.parent, Origins.Ascendant);
-                        }
-                        break;
-                    case Origins.Descendant:
-                        if (node.left != null)
-                        {
-                            canLock = Lock(node.left, Origins.Descendant);
-                        }
-
-                        if (node.right != null && canLock)
-                        {
-                            canLock = Lock(node.right, Origins.Descendant);
-                        }
-                        break;
-                    case Origins.First:
-                        if (node.left != null)
-                        {
-                            canLock = Lock(node.left, Origins.Descendant);
-                        }
-
-                        if (node.right != null && canLock)
-                        {
-                            canLock = Lock(node.right, Origins.Descendant);
-                        }
-
-                        if (node.parent != null && canLock)
-                        {
-                            canLock = Lock(node.parent, Origins.Ascendant);
-                        }
-                        break;
-                }
-                return canLock;
-            }
-
             public bool Unlock()
             {
-                if(Unlock(this, Origins.First))
+                if (!AscendantsLocked(parent) && !DescendantsLocked(left) && !DescendantsLocked(right))
                 {
                     isLocked = false;
                     return true;
@@ -122,52 +72,24 @@ namespace DCP24
                 return false;
             }
 
-            public bool Unlock(Node node, Origins origin)
+            public bool AscendantsLocked(Node node, bool isLocked = false)
             {
-                if (node.IsLocked() && origin != Origins.First)
+                if (node == null || isLocked)
                 {
-                    return false;
+                    return isLocked;
                 }
 
-                var canUnlock = true;
+                return AscendantsLocked(node.parent, node.IsLocked());
+            }
 
-                switch (origin)
+            public bool DescendantsLocked(Node node, bool isLocked = false)
+            {
+                if (node == null || isLocked)
                 {
-                    case Origins.Ascendant:
-                        if (node.parent != null)
-                        {
-                            canUnlock = Unlock(node.parent, Origins.Ascendant);
-                        }
-                        break;
-                    case Origins.Descendant:
-                        if (node.left != null)
-                        {
-                            canUnlock = Unlock(node.left, Origins.Descendant);
-                        }
-
-                        if (node.right != null && canUnlock)
-                        {
-                            canUnlock = Unlock(node.right, Origins.Descendant);
-                        }
-                        break;
-                    case Origins.First:
-                        if (node.left != null)
-                        {
-                            canUnlock = Unlock(node.left, Origins.Descendant);
-                        }
-
-                        if (node.right != null && canUnlock)
-                        {
-                            canUnlock = Unlock(node.right, Origins.Descendant);
-                        }
-
-                        if (node.parent != null && canUnlock)
-                        {
-                            canUnlock = Unlock(node.parent, Origins.Ascendant);
-                        }
-                        break;
+                    return isLocked;
                 }
-                return canUnlock;
+
+                return DescendantsLocked(node.left, node.IsLocked()) || DescendantsLocked(node.right, node.IsLocked());
             }
         }
 
@@ -182,9 +104,9 @@ namespace DCP24
             root.left.AddLeft(new Node(false));
             root.left.AddRight(new Node(false));
 
-            var worked = root.left.Lock() ? "Locking worked" : "Locking didn't work";
+            var worked = root.left.left.Lock() ? "Locking worked" : "Locking didn't work";
 
-            Console.WriteLine($"{worked} the value node is now {(root.left.IsLocked() ? "locked" : "unlocked")}");
+            Console.WriteLine($"{worked} the value node is now {(root.left.left.IsLocked() ? "locked" : "unlocked")}");
         }
     }
 }
