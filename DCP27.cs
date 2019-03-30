@@ -15,13 +15,6 @@ namespace DCP27
 {
     public class DCP27
     {
-        public List<KeyValuePair<char, char>> keyValuePairs = new List<KeyValuePair<char, char>>()
-        {
-            new KeyValuePair<char, char>('{', '}'),
-            new KeyValuePair<char, char>('(', ')'),
-            new KeyValuePair<char, char>('[', ']')
-        };
-
         public static void Main(string[] args)
         {
             Console.WriteLine("Enter the parenthesis string");
