@@ -30,6 +30,11 @@ namespace DCP31
             // calulate difference in length
             var diff = Math.Abs(word1.Length - word2.Length);
 
+            if (word1.Contains(word2) || word2.Contains(word1))
+            {
+                return diff;
+            }
+
             editDistance += diff;
 
             if(word1.Length > word2.Length)
